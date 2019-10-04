@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/logrusorgru/aurora"
 )
 
 const limit int = 14
@@ -19,7 +20,8 @@ type Anime struct {
 }
 
 func (a *Anime) String() string {
-	return fmt.Sprintf("[%s]%s\n%s\n\n", a.time, a.title, a.url)
+	return fmt.Sprintf("[%s]%s\n%s\n\n", aurora.Red(a.time),
+		aurora.BrightMagenta(a.title), aurora.BrightBlue(a.url))
 }
 
 func main() {
@@ -66,7 +68,7 @@ func Extract(r io.Reader) []Anime {
 		link := name.AttrOr("href", "")
 		time := s.Find(".time")
 		if len(name.Text()) > 0 {
-			items = append(items, Anime{time.Text(), name.Text(), link})
+			items = append(items, Anime{strings.TrimSpace(time.Text()), name.Text(), link})
 		}
 	})
 	return items
